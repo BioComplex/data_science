@@ -2,24 +2,22 @@ from plotting.plot_base import *
 
 
 class Curve(object):
-
     @staticmethod
     def plot_curve(df):
 
         fig, ax = plt.subplots()
 
-
-
-        ax.plot(xs, pxy.loc[:, s], label='%s = %d' % (symbol, ys[s]), linewidth=2, linestyle='-',
+        ax.plot(df['x'], df['y'], label='%s = %d' % (symbol, ys[s]), linewidth=2, linestyle='-',
                 color=next(PlotBase.colorcycler), marker=next(PlotBase.markercycler), alpha=0.8)
 
         ax.locator_params(nbins=7)
         ax.tick_params(axis='both', which='major', labelsize=25)
-        ax.set_title(organ_name, size=35, y=1.00)
+        # ax.set_title(organ_name, size=35, y=1.00)
         ax.legend(loc='upper left', fontsize=14)
 
-        PlotBase.configure_ax(ax)
+        # PlotBase.configure_ax(ax)
 
+        return fig, ax
 
     @staticmethod
     def plot_curves(df, x_name, y_name, time, xlabel=None, ylabel=None, symbol=None, sharex=True, outputfile=None):
@@ -30,7 +28,8 @@ class Curve(object):
         for i in range(axs.shape[0]):
             for j in range(axs.shape[1]):
 
-                markers = ['D', 's', 'x', '^', 'd', 'h', '+', '*', ',', 'o', '.', '1', 'p', '3', '2', '4', 'H', 'v', '8',
+                markers = ['D', 's', 'x', '^', 'd', 'h', '+', '*', ',', 'o', '.', '1', 'p', '3', '2', '4', 'H', 'v',
+                           '8',
                            '<', '>']
                 colors = ['g', 'y', 'r', 'b', 'black']
                 markercycler = cycle(markers)
@@ -97,36 +96,36 @@ class Curve(object):
             plt.savefig(outputfile)
 
 
-    # x_name = 'distance'
-    # y_name = 'survival_time'
-    # time = 'short'
-    #
-    # xlabel = 'Distance (D) Miles'
-    # ylabel = '$P(T \leq t | D > d)$'
-    #
-    #
-    # outputfile = 'plots/curves/%s/%s_%s.pdf' %(time, x_name, y_name)
-    # plot_curves(x_name,
-    #           y_name, time,
-    #           ylabel=ylabel,
-    #           xlabel=xlabel,
-    #          symbol='$t$',sharex=False,
-    #           outputfile=outputfile)
+            # x_name = 'distance'
+            # y_name = 'survival_time'
+            # time = 'short'
+            #
+            # xlabel = 'Distance (D) Miles'
+            # ylabel = '$P(T \leq t | D > d)$'
+            #
+            #
+            # outputfile = 'plots/curves/%s/%s_%s.pdf' %(time, x_name, y_name)
+            # plot_curves(x_name,
+            #           y_name, time,
+            #           ylabel=ylabel,
+            #           xlabel=xlabel,
+            #          symbol='$t$',sharex=False,
+            #           outputfile=outputfile)
 
 
 
-    # x_name = 'cold_ischemic'
-    # y_name = 'survival_time'
-    # time = 'short'
-    #
-    # xlabel = 'Ischemic Time (I) Hours'
-    # ylabel = '$P(T \leq t | I > i )$'
-    #
-    #
-    # outputfile = 'plots/curves/%s/%s_%s.pdf' %(time, x_name, y_name)
-    # plot_curves(x_name,
-    #           y_name, time,
-    #           ylabel=ylabel,
-    #           xlabel=xlabel,
-    #          symbol='$t$',sharex=False,
-    #           outputfile=outputfile)
+            # x_name = 'cold_ischemic'
+            # y_name = 'survival_time'
+            # time = 'short'
+            #
+            # xlabel = 'Ischemic Time (I) Hours'
+            # ylabel = '$P(T \leq t | I > i )$'
+            #
+            #
+            # outputfile = 'plots/curves/%s/%s_%s.pdf' %(time, x_name, y_name)
+            # plot_curves(x_name,
+            #           y_name, time,
+            #           ylabel=ylabel,
+            #           xlabel=xlabel,
+            #          symbol='$t$',sharex=False,
+            #           outputfile=outputfile)

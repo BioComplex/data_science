@@ -98,7 +98,10 @@ class Joints():
         df_freq = df_freq[df_freq.index.get_level_values(0) < max_value]
         df_freq = df_freq.apply(CI.calculate_ci, axis=1)
 
-        return df_freq
+        pxy = df_freq['p_tilde']
+
+
+        return pxy
 
 # df = pd.DataFrame({'x': [1,1,1,1,1,2,2,2,2,2,3,3,3,3,4,4], 'y': [50,51,53,52,57,43,42,45,48,44,32,35,32,33,21,20]})
 # df_freq = get_hist2d(df)
