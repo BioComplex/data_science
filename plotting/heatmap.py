@@ -1,8 +1,9 @@
+import numpy as np
+import matplotlib.pyplot as plt
+
 class HeatMap():
     @staticmethod
-    def plot_mat(pxy, clim=None, title=None, xlabel=None, ylabel=None, xticklabels=None,
-                 yticklabels=None):
-
+    def plot_mat(pxy, clim=None, title=None, xlabel=None, ylabel=None, xticklabels=None, yticklabels=None):
 
         xs = pxy.index.get_level_values(0).unique()
         ys = pxy.index.get_level_values(1).unique()
@@ -21,12 +22,12 @@ class HeatMap():
         if clim:
             mat.set_clim(clim[0], clim[1])
 
-        ax.set_title(title, size=25, y=1.0)
+        # ax.set_title(title, size=25, y=1.0)
 
         #Put labels on the bottom
         ax.xaxis.set_ticks_position('bottom')
         #Make labels greater
-        ax.tick_params(axis='both', which='major', labelsize=25)
+        # ax.tick_params(axis='both', which='major', labelsize=25)
 
         xticklabels = xs
         xticks = ax.get_xticks()
@@ -41,7 +42,7 @@ class HeatMap():
         tick_loc = [pxy_min, (pxy_max + pxy_min) / 2, pxy_max]
         c = fig.colorbar(mat, ax=ax, ticks=tick_loc, format='%.2f')
 
-        c.ax.tick_params(labelsize=20)
+        # c.ax.tick_params(labelsize=20)
 
         return mat
 
@@ -140,32 +141,32 @@ class HeatMap():
 #           outputfile=outputfile)
 
 
-
+#
 # from statistician.joints import *
 # import pandas as pd
 # import matplotlib.pyplot as plt
-
-# df = pd.DataFrame({'x': [1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 3, 3, 3, 3, 4, 4, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 3, 3, 3, 3, 4, 4, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 3, 3, 3, 3, 4, 4],
-#                    'y': [50, 51, 53, 52, 57, 43, 42, 45, 48, 44, 32, 35, 32, 33, 21, 20, 50, 51, 53, 52, 57, 43, 42, 45, 48, 44, 32, 35, 32, 33, 21, 20, 50, 51, 53, 52, 57, 43, 42, 45, 48, 44, 32, 35, 32, 33, 21, 20]})
-
 #
+# # df = pd.DataFrame({'x': [1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 3, 3, 3, 3, 4, 4, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 3, 3, 3, 3, 4, 4, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 3, 3, 3, 3, 4, 4],
+# #                    'y': [50, 51, 53, 52, 57, 43, 42, 45, 48, 44, 32, 35, 32, 33, 21, 20, 50, 51, 53, 52, 57, 43, 42, 45, 48, 44, 32, 35, 32, 33, 21, 20, 50, 51, 53, 52, 57, 43, 42, 45, 48, 44, 32, 35, 32, 33, 21, 20]})
+#
+# #
 # df = pd.DataFrame({'x': np.random.normal(10, 1, 50),
 #                    'y': np.random.normal(1, 1, 50)})
-#
-#
-#
-#
-#
-#
+# #
+# #
+# #
+# #
+# #
+# #
 # pxy = Joints.calculate_joints(df, x_bin_size=0.5, y_bin_size=0.5)
-#
-#
-#
-#
+# #
+# #
+# #
+# #
 # HeatMap.plot_mat(pxy)
-#
+# #
 # plt.show()
-#
+# #
 #
 #
 # import numpy as np

@@ -3,6 +3,7 @@ import pandas as pd
 from statistician.confidence_interval import CI
 
 
+
 # def get_bins(df, name, bin_size, f_max=max):
 
 class Joints():
@@ -42,14 +43,14 @@ class Joints():
 
     @staticmethod
     def get_hist(df=None,
-                 x_bins=1,
-                 y_bins=1,
+                 xbins=None,
+                 ybins=None,
                  y_callback=None,
                  x_callback=None):
         if df is None:
             raise ('df is none')
 
-        df_freq = pd.DataFrame(index=pd.MultiIndex.from_product([x_bins, y_bins], names=['X', 'Y']),
+        df_freq = pd.DataFrame(index=pd.MultiIndex.from_product([xbins, ybins], names=['X', 'Y']),
                                columns=['X>x',
                                         # 'X<=x',
                                         # 'Y<=y',
@@ -71,11 +72,11 @@ class Joints():
     @staticmethod
     def calculate_joints(df=None,
                          # x_name=None,
-                         x_bin_size=1,
+                         xbins=None,
                          x_max=(lambda v: v.max()),
                          x_callback=None,
                          # y_name=None,
-                         y_bin_size=1,
+                         ybins=None,
                          y_max=(lambda v: v.max()),
                          y_callback=None):
         # x_bins = get_bins(df, x_name, x_bin_size, x_max)
@@ -84,18 +85,18 @@ class Joints():
         # df['x'] = df[x_name]
         # df['y'] = df[y_name]
 
-        x_bins = Joints.get_bins(df['x'], x_bin_size, x_max)
-        y_bins = Joints.get_bins(df['y'], y_bin_size, y_max)
+        # x_bins = Joints.get_bins(df['x'], x_bin_size, x_max)
+        # y_bins = Joints.get_bins(df['y'], y_bin_size, y_max)
 
         df_freq = Joints.get_hist(df=df,
-                                  x_bins=x_bins,
+                                  xbins=xbins,
                                   x_callback=x_callback,
-                                  y_bins=y_bins,
+                                  ybins=ybins,
                                   y_callback=y_callback)
 
         #TODO make general, parameterize
-        max_value = df['x'].quantile(0.99)
-        df_freq = df_freq[df_freq.index.get_level_values(0) < max_value]
+        # max_value = df['x'].quantile(0.99)
+        # df_freq = df_freq[df_freq.index.get_level_values(0) < max_value]
         df_freq = df_freq.apply(CI.calculate_ci, axis=1)
 
         pxy = df_freq['p_tilde']

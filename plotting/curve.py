@@ -3,21 +3,24 @@ from plotting.plot_base import *
 
 class Curve(object):
     @staticmethod
-    def plot_curve(df):
+    def plot_curve(df, ax=None):
 
-        fig, ax = plt.subplots()
+        # fig, ax = plt.subplots()
 
-        ax.plot(df['x'], df['y'], label='%s = %d' % (symbol, ys[s]), linewidth=2, linestyle='-',
-                color=next(PlotBase.colorcycler), marker=next(PlotBase.markercycler), alpha=0.8)
+        ax.plot(df['x'], df['y'],
+                # label='%s = %d' % (symbol, ys[s]),
+                linewidth=2,
+                linestyle='-',
+                color=next(PlotBase.colorcycler),
+                marker=next(PlotBase.markercycler), alpha=0.8)
 
         ax.locator_params(nbins=7)
-        ax.tick_params(axis='both', which='major', labelsize=25)
-        # ax.set_title(organ_name, size=35, y=1.00)
+        ax.tick_params(axis='both', which='major', labelsize=10)
         ax.legend(loc='upper left', fontsize=14)
 
         # PlotBase.configure_ax(ax)
 
-        return fig, ax
+        return ax
 
     @staticmethod
     def plot_curves(df, x_name, y_name, time, xlabel=None, ylabel=None, symbol=None, sharex=True, outputfile=None):
@@ -128,4 +131,15 @@ class Curve(object):
             #           ylabel=ylabel,
             #           xlabel=xlabel,
             #          symbol='$t$',sharex=False,
-            #           outputfile=outputfile)
+#             #           outputfile=outputfile)
+# import pandas as pd
+# import matplotlib.pyplot as plt
+# import numpy as np
+#
+# df = pd.DataFrame({'x': np.arange(0, 10),
+#                    'y': 2 * np.arange(0, 10)})
+#
+#
+# fig, ax = plt.subplots()
+#
+# Curve.plot_curve(df, ax)
