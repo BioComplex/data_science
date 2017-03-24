@@ -1,145 +1,139 @@
 from plotting.plot_base import *
+import numpy as np
 
 
 class Curve(object):
     @staticmethod
-    def plot_curve(df, ax=None):
+    def plot_curves_subplots(dfs, par_plot=None):
 
-        # fig, ax = plt.subplots()
+        assert dfs is not None and type(dfs) is list, "df is none or not list"
 
-        ax.plot(df['x'], df['y'],
-                # label='%s = %d' % (symbol, ys[s]),
-                linewidth=2,
-                linestyle='-',
-                color=next(PlotBase.colorcycler),
-                marker=next(PlotBase.markercycler), alpha=0.8)
+        par_plot = Curve.get_par_plot_subplots(par_plot)
 
-        ax.locator_params(nbins=7)
-        ax.tick_params(axis='both', which='major', labelsize=10)
-        ax.legend(loc='upper left', fontsize=14)
+        par_subplots = par_plot['subplots']
+        nrows, ncols, sharex, sharey = par_subplots['nrows'], par_subplots['ncols'], par_subplots['sharex'], \
+                                       par_subplots['sharey']
 
-        # PlotBase.configure_ax(ax)
+
+
+
+        fig, axs = plt.subplots(nrows=nrows, ncols=ncols, sharex=sharex, sharey=sharey)
+
+        titles = PlotBase.get_par(par_subplots, 'title', transform=cycle)
+
+
+        axs = np.ravel(np.array(axs))
+        for i in range(len(axs)):
+            ax = axs[i]
+            sub_dfs = dfs[i]
+            ax = Curve.plot_curves(sub_dfs, par_plot, ax)
+
+            if titles:
+                ax.set_title(next(titles))
+
+
+        # ax.locator_params(nbins=7)
+        # ax.tick_params(axis='both', which='major', labelsize=10)
+        ax.legend(loc=par_plot['loc'], fontsize=14)
+        #
+
+        # TODO parameterize
+        # plt.tight_layout()
+
+
+        figsize = PlotBase.get_par(par_plot, 'figsize')
+        if figsize:
+            fig.set_size_inches(figsize)
+
+        return fig, axs
+
+    @staticmethod
+    def plot_curves(dfs, par_plot, ax=None):
+
+        if ax is None:
+            fig, ax = plt.subplots(1, 1)
+
+        Curve.__get_par_curve(par_plot)
+        titles = PlotBase.get_par(par_plot, 'title')
+
+        legends = PlotBase.get_par(par_plot, 'legends', transform=cycle)
+
+        for df in dfs:
+
+            if legends is not None:
+                label = next(legends)
+
+            ax.plot(df['x'], df['y'],
+                    linewidth=par_plot['linewidth'],
+                    linestyle=par_plot['linestyle'],
+                    alpha=par_plot['alpha'],
+                    color=next(par_plot['color']),
+                    marker=next(par_plot['marker']),
+                    label=label)
+
+            if titles:
+                ax.set_title(titles)
+
+            PlotBase.configure_ax(ax, par_plot)
+
+            # TODO parameterize
+            ax.grid()
 
         return ax
 
+
     @staticmethod
-    def plot_curves(df, x_name, y_name, time, xlabel=None, ylabel=None, symbol=None, sharex=True, outputfile=None):
-        organs_cycle = cycle(organs)
+    def get_par_plot_subplots(par_plot):
+        if not par_plot:
+            par_plot = dict()
 
-        fig, axs = plt.subplots(2, 3, sharey=False, sharex=sharex)
+        PlotBase.__get_par__(par_plot, 'nrows', 1)
+        PlotBase.__get_par__(par_plot, 'ncols', 1)
+        PlotBase.__get_par__(par_plot, 'sharey', False)
+        PlotBase.__get_par__(par_plot, 'sharex', False)
 
-        for i in range(axs.shape[0]):
-            for j in range(axs.shape[1]):
+        PlotBase.__get_par__(par_plot, 'loc', 2)
+        PlotBase.__get_par__(par_plot, 'linewidth', 2)
 
-                markers = ['D', 's', 'x', '^', 'd', 'h', '+', '*', ',', 'o', '.', '1', 'p', '3', '2', '4', 'H', 'v',
-                           '8',
-                           '<', '>']
-                colors = ['g', 'y', 'r', 'b', 'black']
-                markercycler = cycle(markers)
-                colorcycler = cycle(colors)
-
-                ax = axs[i, j]
-                organ_name = next(organs_cycle)
-                df_freq = organs[organ_name][x_name][y_name][time]
-                x_max_value = organs_df[organ_name]['df'][x_name].quantile(0.99)
-                df_freq = df_freq[df_freq.index.get_level_values(0) <= x_max_value]
-                df_freq = df_freq.apply(calculate_ci, axis=1)
-                pxy = df_freq['p_tilde']
-                #             y_max_value = organs_df[organ_name]['df'][y_name].quantile(0.99)
-                #             df_freq = df_freq[df_freq.index.get_level_values(1) < y_max_value]
+        return par_plot
 
 
-                #             pxy = df_freq['X>x, Y<=y'] / df_freq['X>x']
-                xs = pxy.index.get_level_values(0).unique()
-                #             ys = pxy.index.get_level_values(1).unique()
-                #             pxy = pxy.reshape(len(xs),len(ys))
+    @staticmethod
+    def __get_par_curve(par_plot):
+        PlotBase.__get_par__(par_plot, 'linestyle', '-')
+        PlotBase.__get_par__(par_plot, 'alpha', .8)
+        PlotBase.__get_par__(par_plot, 'color', cycle(PlotBase.colors))
+        PlotBase.__get_par__(par_plot, 'marker', cycle(PlotBase.markers))
 
-                pxy = pxy.fillna(0)
-                #             pxy = np.nan_to_num(pxy)
-                #             pxy = pxy.T
-
-                #             amax = len(pxy) - 1
-
-                b = 5.
-
-                a1 = 0
-                a2 = 1
-                a3 = 7
-                a4 = 15
-                a5 = 30
-
-                slices = [a1, a2, a3, a4, a5]
-                # ax.set_color_cycle([plt.cm.cool(i) for i in range(len(slices))])
-                ax.grid(alpha=1)
-                for s in slices:
-                    p = pxy[:, s]
-                    ax.plot(xs, pxy.loc[:, s], label='%s = %d' % (symbol, ys[s]), linewidth=2, linestyle='-',
-                            color=next(colorcycler), marker=next(markercycler), alpha=0.8)
-                # xticks = ax.get_xticks()
-                #                 xlabels = [xs[int(xticks[i])] for i in range(len(xticks)-1)]
-                #                 ax.set_xticklabels(xlabels, rotation='horizontal', minor=False)
-                ax.locator_params(nbins=7)
-                ax.tick_params(axis='both', which='major', labelsize=25)
-                ax.set_title(organ_name, size=35, y=1.00)
-                ax.legend(loc='upper left', fontsize=14)
-
-        for i in range(axs.shape[0]):
-            ax = axs[i, 0]
-            ax.set_ylabel(ylabel, size=25)
-
-        for i in range(axs.shape[1]):
-            ax = axs[axs.shape[0] - 1, i]
-            ax.set_xlabel(xlabel, size=25)
-        # ax.set_title('%s' % (organ_name), size=30)
-        fig.set_size_inches(20, 10)
-        #     fig.set_size_inches(25, 30)
-        fig.tight_layout()  # pad=1.0, h_pad=0.5, w_pad=0.5)
-
-        if outputfile:
-            plt.savefig(outputfile)
+        PlotBase.__set_par__(par_plot, 'label', cycle)
 
 
-            # x_name = 'distance'
-            # y_name = 'survival_time'
-            # time = 'short'
-            #
-            # xlabel = 'Distance (D) Miles'
-            # ylabel = '$P(T \leq t | D > d)$'
-            #
-            #
-            # outputfile = 'plots/curves/%s/%s_%s.pdf' %(time, x_name, y_name)
-            # plot_curves(x_name,
-            #           y_name, time,
-            #           ylabel=ylabel,
-            #           xlabel=xlabel,
-            #          symbol='$t$',sharex=False,
-            #           outputfile=outputfile)
-
-
-
-            # x_name = 'cold_ischemic'
-            # y_name = 'survival_time'
-            # time = 'short'
-            #
-            # xlabel = 'Ischemic Time (I) Hours'
-            # ylabel = '$P(T \leq t | I > i )$'
-            #
-            #
-            # outputfile = 'plots/curves/%s/%s_%s.pdf' %(time, x_name, y_name)
-            # plot_curves(x_name,
-            #           y_name, time,
-            #           ylabel=ylabel,
-            #           xlabel=xlabel,
-            #          symbol='$t$',sharex=False,
-#             #           outputfile=outputfile)
-# import pandas as pd
-# import matplotlib.pyplot as plt
-# import numpy as np
-#
-# df = pd.DataFrame({'x': np.arange(0, 10),
-#                    'y': 2 * np.arange(0, 10)})
-#
-#
-# fig, ax = plt.subplots()
-#
-# Curve.plot_curve(df, ax)
+    # def test():
+    #     par_plot = {
+    #         'subplots': {
+    #             'title': ['title 1', 'title 2'],
+    #             'nrows': 2,
+    #             'ncols': 1,
+    #             'sharex': True,
+    #             'sharey': True,
+    #         },
+    #
+    #         'x_label': 'Community Size ($c$)',
+    #         'y_label': '$P(C \leq c)$',
+    #         'linewidth': 2,
+    #         'loc': 4,
+    #         'label': ['a', 'b']
+    #
+    #     }
+    #     import pandas as pd
+    #     curves1 = []
+    #     curves1.append({'x': [1, 2, 3, 4], 'y': [4, 3, 2, 1]})
+    #     curves1.append({'x': [1, 2, 3, 4], 'y': [1, 2, 3, 4]})
+    #     curves2 = []
+    #     curves2.append({'x': [1, 2, 3, 4], 'y': [4, 3, 2, 1]})
+    #     curves2.append({'x': [1, 2, 3, 4], 'y': [1, 2, 3, 4]})
+    #
+    #     Curve.plot_curves_subplots([curves1, curves2], par_plot)
+    #
+    #
+    # test()
