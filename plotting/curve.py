@@ -14,12 +14,7 @@ class Curve(object):
 
         fig, axs = plt.subplots(nrows=nrows, ncols=ncols, sharex=sharex, sharey=sharey)
 
-        par_figtitle = PlotBase.get_par(par_subplots, 'fig.title')
-
-        # par_plot['title'] = PlotBase.get_par(par_subplots, 'title', transform=cycle)
-
         par_titles = PlotBase.get_par(par_subplots, 'title', transform=cycle)
-
 
 
         axs = np.ravel(np.array(axs))
@@ -27,16 +22,32 @@ class Curve(object):
             ax = axs[i]
             sub_dfs = dfs[i]
             ax = Curve.plot_curves(sub_dfs, par_plot, ax)
-
-            if par_figtitle:
-                fig.suptitle(par_figtitle, fontsize=30, fontweight="bold")
-
             if par_titles:
                 ax.set_title(next(par_titles))
+
+        par_legend = PlotBase.get_par(par_subplots, 'legend')
+        if par_legend:
+            par_legend_fontsize = PlotBase.get_par(par_subplots, 'legend.fontsize')
+            par_legend_loc = PlotBase.get_par(par_subplots, 'legend.loc')
+            par_legend_pos = int(PlotBase.get_par(par_subplots, 'legend.pos', default=0))
+            axs[par_legend_pos].legend(labels=par_legend, loc=par_legend_loc, fontsize=par_legend_fontsize)
+
+        par_xlabel = PlotBase.get_par(par_subplots, 'x_label')
+        par_xlabel_pos = PlotBase.get_par(par_subplots, 'x_label.pos', [0])
+        if par_xlabel:
+            [axs[i].set_xlabel(par_xlabel) for i in par_xlabel_pos]
+
+        par_ylabel = PlotBase.get_par(par_subplots, 'y_label')
+        par_ylabel_pos = PlotBase.get_par(par_subplots, 'y_label.pos', [0])
+        if par_ylabel:
+            [axs[i].set_ylabel(par_ylabel) for i in par_ylabel_pos]
+
+        PlotBase.configure_fig(fig, par_subplots)
         # PlotBase.configure_ax(ax, par_subplots)
 
         # TODO parameterize
         # plt.tight_layout()
+        # fig.tight_layout(rect=par_figrect, w_pad=par_figwpad, h_pad=par_fighpad, pad=par_figpad)  # pad=1.0, h_pad=0.5, w_pad=0.5)
 
 
 
@@ -61,7 +72,7 @@ class Curve(object):
         par_alpha = PlotBase.get_par(par_plot, 'alpha', .8)
         par_color = PlotBase.get_par(par_plot, 'color', default=PlotBase.colors, transform=cycle)
         par_marker = PlotBase.get_par(par_plot, 'marker', default=PlotBase.markers, transform=cycle)
-        par_legends = PlotBase.get_par(par_plot, 'legends', transform=cycle)
+        par_legend = PlotBase.get_par(par_plot, 'legend', transform=cycle)
 
 
 
@@ -69,8 +80,8 @@ class Curve(object):
         for df in dfs:
 
             label = None
-            if par_legends:
-                label = next(par_legends)
+            if par_legend:
+                label = next(par_legend)
 
             ax.plot(df['x'], df['y'],
                     linewidth=par_linewidth,
@@ -84,63 +95,7 @@ class Curve(object):
             PlotBase.configure_ax(ax, par_plot)
 
             # TODO parameterize
-            ax.grid()
+
+        # plt.rc('font', **{'family': 'sans-serif', 'sans-serif': ['Arial'], 'size': 12})
 
         return ax
-
-
-    # @staticmethod
-    # def get_par_plot_subplots(par_plot):
-    #     if not par_plot:
-    #         par_plot = dict()
-    #
-    #     PlotBase.__get_par__(par_plot, 'nrows', 1)
-    #     PlotBase.__get_par__(par_plot, 'ncols', 1)
-    #     PlotBase.__get_par__(par_plot, 'sharey', False)
-    #     PlotBase.__get_par__(par_plot, 'sharex', False)
-    #
-    #     PlotBase.__get_par__(par_plot, 'loc', 2)
-    #     PlotBase.__get_par__(par_plot, 'linewidth', 2)
-    #
-    #     return par_plot
-
-
-    # @staticmethod
-    # def __get_par_curve(par_plot):
-    #     PlotBase.__get_par__(par_plot, 'linestyle', '-')
-    #     PlotBase.__get_par__(par_plot, 'alpha', .8)
-    #     PlotBase.__get_par__(par_plot, 'color', cycle(PlotBase.colors))
-    #     PlotBase.__get_par__(par_plot, 'marker', cycle(PlotBase.markers))
-    #
-    #     PlotBase.__set_par__(par_plot, 'label', cycle)
-
-
-    # def test():
-    #     par_plot = {
-    #         'subplots': {
-    #             'title': ['title 1', 'title 2'],
-    #             'nrows': 2,
-    #             'ncols': 1,
-    #             'sharex': True,
-    #             'sharey': True,
-    #         },
-    #
-    #         'x_label': 'Community Size ($c$)',
-    #         'y_label': '$P(C \leq c)$',
-    #         'linewidth': 2,
-    #         'loc': 4,
-    #         'label': ['a', 'b']
-    #
-    #     }
-    #     import pandas as pd
-    #     curves1 = []
-    #     curves1.append({'x': [1, 2, 3, 4], 'y': [4, 3, 2, 1]})
-    #     curves1.append({'x': [1, 2, 3, 4], 'y': [1, 2, 3, 4]})
-    #     curves2 = []
-    #     curves2.append({'x': [1, 2, 3, 4], 'y': [4, 3, 2, 1]})
-    #     curves2.append({'x': [1, 2, 3, 4], 'y': [1, 2, 3, 4]})
-    #
-    #     Curve.plot_curves_subplots([curves1, curves2], par_plot)
-    #
-    #
-    # test()
