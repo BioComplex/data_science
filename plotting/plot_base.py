@@ -11,10 +11,17 @@ class PlotBase(object):
 
     @staticmethod
     def configure_ax(ax, par_plot):
-        PlotBase.get_par_plot(par_plot)
-        PlotBase.set_par(ax.set_xlabel, par_plot, 'x_label')
-        PlotBase.set_par(ax.set_ylabel, par_plot, 'y_label')
+        # PlotBase.get_par_plot(par_plot)
+        PlotBase.set_par(par_plot, 'x_label', ax.set_xlabel)
+        PlotBase.set_par(par_plot, 'y_label', ax.set_ylabel)
 
+        par_titles = PlotBase.get_par(par_plot, 'title', transform=cycle)
+        if par_titles:
+            ax.set_title(next(par_titles))
+
+        par_loc = PlotBase.get_par(par_plot, 'legend.loc', default=4)
+        par_fontsize = PlotBase.get_par(par_plot, 'legend.fontsize', default=8)
+        ax.legend(loc=par_loc, fontsize=par_fontsize)
         # ax.set_title(par_plot['title'])
         # ax.grid(alpha=grid_alpha)
 
@@ -26,20 +33,10 @@ class PlotBase(object):
         # PlotBase.__get_par__(par_plot, 'title', 'title')
 
     @staticmethod
-    def set_par(func, par_plot, name):
-        if par_plot.keys().__contains__(name):
-            func(par_plot[name])
-
-
-    @staticmethod
-    def __get_par__(par_plot, par, default=None):
-        if not par_plot.keys().__contains__(par):
-            par_plot[par] = default
-
-    @staticmethod
-    def __set_par__(par_plot, par, func):
-        if par_plot.keys().__contains__(par):
-            par_plot[par] = func(par_plot[par])
+    def set_par(par_plot, name, func, default=None, transform=None):
+        par = PlotBase.get_par(par_plot, name, default, transform)
+        if par:
+            func(par)
 
     @staticmethod
     def get_par(par_plot, name, default=None, transform=None):

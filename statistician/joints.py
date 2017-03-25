@@ -100,6 +100,7 @@ class Joints():
         df_freq = df_freq.apply(CI.calculate_ci, axis=1)
 
         pxy = df_freq['p_tilde']
+        pxy = pxy.fillna(0)
 
 
         return pxy

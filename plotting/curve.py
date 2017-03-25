@@ -8,19 +8,13 @@ class Curve(object):
 
         assert dfs is not None and type(dfs) is list, "df is none or not list"
 
-        par_plot = Curve.get_par_plot_subplots(par_plot)
-
         par_subplots = par_plot['subplots']
         nrows, ncols, sharex, sharey = par_subplots['nrows'], par_subplots['ncols'], par_subplots['sharex'], \
                                        par_subplots['sharey']
 
-
-
-
         fig, axs = plt.subplots(nrows=nrows, ncols=ncols, sharex=sharex, sharey=sharey)
 
-        titles = PlotBase.get_par(par_subplots, 'title', transform=cycle)
-
+        par_figtitle = PlotBase.get_par(par_subplots, 'fig.title')
 
         axs = np.ravel(np.array(axs))
         for i in range(len(axs)):
@@ -28,22 +22,23 @@ class Curve(object):
             sub_dfs = dfs[i]
             ax = Curve.plot_curves(sub_dfs, par_plot, ax)
 
-            if titles:
-                ax.set_title(next(titles))
+            if par_figtitle:
+                fig.suptitle(par_figtitle, fontsize=30, fontweight="bold")
 
 
-        # ax.locator_params(nbins=7)
-        # ax.tick_params(axis='both', which='major', labelsize=10)
-        ax.legend(loc=par_plot['loc'], fontsize=14)
-        #
+        # PlotBase.configure_ax(ax, par_subplots)
 
         # TODO parameterize
         # plt.tight_layout()
 
 
+
+
         figsize = PlotBase.get_par(par_plot, 'figsize')
         if figsize:
             fig.set_size_inches(figsize)
+
+        plt.rc('font', **{'family': 'sans-serif', 'sans-serif': ['Arial'], 'size': 12})
 
         return fig, axs
 
@@ -53,26 +48,29 @@ class Curve(object):
         if ax is None:
             fig, ax = plt.subplots(1, 1)
 
-        Curve.__get_par_curve(par_plot)
-        titles = PlotBase.get_par(par_plot, 'title')
+        #Parameters
+        par_linewidth = PlotBase.get_par(par_plot, 'linewidth', 2)
+        par_linestyle = PlotBase.get_par(par_plot, 'linestyle', '-')
+        par_alpha = PlotBase.get_par(par_plot, 'alpha', .8)
+        par_color = PlotBase.get_par(par_plot, 'color', default=PlotBase.colors, transform=cycle)
+        par_marker = PlotBase.get_par(par_plot, 'marker', default=PlotBase.markers, transform=cycle)
+        par_legends = PlotBase.get_par(par_plot, 'legends', transform=cycle)
 
-        legends = PlotBase.get_par(par_plot, 'legends', transform=cycle)
 
         for df in dfs:
 
-            if legends is not None:
-                label = next(legends)
+            label = None
+            if par_legends:
+                label = next(par_legends)
 
             ax.plot(df['x'], df['y'],
-                    linewidth=par_plot['linewidth'],
-                    linestyle=par_plot['linestyle'],
-                    alpha=par_plot['alpha'],
-                    color=next(par_plot['color']),
-                    marker=next(par_plot['marker']),
+                    linewidth=par_linewidth,
+                    linestyle=par_linestyle,
+                    alpha=par_alpha,
+                    color=next(par_color),
+                    marker=next(par_marker),
                     label=label)
 
-            if titles:
-                ax.set_title(titles)
 
             PlotBase.configure_ax(ax, par_plot)
 
@@ -82,30 +80,30 @@ class Curve(object):
         return ax
 
 
-    @staticmethod
-    def get_par_plot_subplots(par_plot):
-        if not par_plot:
-            par_plot = dict()
+    # @staticmethod
+    # def get_par_plot_subplots(par_plot):
+    #     if not par_plot:
+    #         par_plot = dict()
+    #
+    #     PlotBase.__get_par__(par_plot, 'nrows', 1)
+    #     PlotBase.__get_par__(par_plot, 'ncols', 1)
+    #     PlotBase.__get_par__(par_plot, 'sharey', False)
+    #     PlotBase.__get_par__(par_plot, 'sharex', False)
+    #
+    #     PlotBase.__get_par__(par_plot, 'loc', 2)
+    #     PlotBase.__get_par__(par_plot, 'linewidth', 2)
+    #
+    #     return par_plot
 
-        PlotBase.__get_par__(par_plot, 'nrows', 1)
-        PlotBase.__get_par__(par_plot, 'ncols', 1)
-        PlotBase.__get_par__(par_plot, 'sharey', False)
-        PlotBase.__get_par__(par_plot, 'sharex', False)
 
-        PlotBase.__get_par__(par_plot, 'loc', 2)
-        PlotBase.__get_par__(par_plot, 'linewidth', 2)
-
-        return par_plot
-
-
-    @staticmethod
-    def __get_par_curve(par_plot):
-        PlotBase.__get_par__(par_plot, 'linestyle', '-')
-        PlotBase.__get_par__(par_plot, 'alpha', .8)
-        PlotBase.__get_par__(par_plot, 'color', cycle(PlotBase.colors))
-        PlotBase.__get_par__(par_plot, 'marker', cycle(PlotBase.markers))
-
-        PlotBase.__set_par__(par_plot, 'label', cycle)
+    # @staticmethod
+    # def __get_par_curve(par_plot):
+    #     PlotBase.__get_par__(par_plot, 'linestyle', '-')
+    #     PlotBase.__get_par__(par_plot, 'alpha', .8)
+    #     PlotBase.__get_par__(par_plot, 'color', cycle(PlotBase.colors))
+    #     PlotBase.__get_par__(par_plot, 'marker', cycle(PlotBase.markers))
+    #
+    #     PlotBase.__set_par__(par_plot, 'label', cycle)
 
 
     # def test():
