@@ -16,6 +16,12 @@ class Curve(object):
 
         par_figtitle = PlotBase.get_par(par_subplots, 'fig.title')
 
+        # par_plot['title'] = PlotBase.get_par(par_subplots, 'title', transform=cycle)
+
+        par_titles = PlotBase.get_par(par_subplots, 'title', transform=cycle)
+
+
+
         axs = np.ravel(np.array(axs))
         for i in range(len(axs)):
             ax = axs[i]
@@ -25,7 +31,8 @@ class Curve(object):
             if par_figtitle:
                 fig.suptitle(par_figtitle, fontsize=30, fontweight="bold")
 
-
+            if par_titles:
+                ax.set_title(next(par_titles))
         # PlotBase.configure_ax(ax, par_subplots)
 
         # TODO parameterize
@@ -55,6 +62,8 @@ class Curve(object):
         par_color = PlotBase.get_par(par_plot, 'color', default=PlotBase.colors, transform=cycle)
         par_marker = PlotBase.get_par(par_plot, 'marker', default=PlotBase.markers, transform=cycle)
         par_legends = PlotBase.get_par(par_plot, 'legends', transform=cycle)
+
+
 
 
         for df in dfs:
