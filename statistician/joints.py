@@ -3,7 +3,6 @@ import pandas as pd
 from statistician.confidence_interval import CI
 
 
-
 # def get_bins(df, name, bin_size, f_max=max):
 
 class Joints():
@@ -94,14 +93,13 @@ class Joints():
                                   ybins=ybins,
                                   y_callback=y_callback)
 
-        #TODO make general, parameterize
+        # TODO make general, parameterize
         # max_value = df['x'].quantile(0.99)
         # df_freq = df_freq[df_freq.index.get_level_values(0) < max_value]
         df_freq = df_freq.apply(CI.calculate_ci, axis=1)
 
         pxy = df_freq['p_tilde']
         pxy = pxy.fillna(0)
-
 
         return pxy
 

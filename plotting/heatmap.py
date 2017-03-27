@@ -1,9 +1,10 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
+
 class HeatMap():
     @staticmethod
-    def plot_mat(pxy, fig, ax): #clim=None, title=None, xlabel=None, ylabel=None, xticklabels=None, yticklabels=None):
+    def plot_mat(pxy, fig, ax):  # clim=None, title=None, xlabel=None, ylabel=None, xticklabels=None, yticklabels=None):
 
         xs = pxy.index.get_level_values(0).unique()
         ys = pxy.index.get_level_values(1).unique()
@@ -24,9 +25,9 @@ class HeatMap():
 
         # ax.set_title(title, size=25, y=1.0)
 
-        #Put labels on the bottom
+        # Put labels on the bottom
         ax.xaxis.set_ticks_position('bottom')
-        #Make labels greater
+        # Make labels greater
         # ax.tick_params(axis='both', which='major', labelsize=25)
 
         xticklabels = xs
@@ -46,7 +47,7 @@ class HeatMap():
 
         return fig, ax, mat
 
-#     @staticmethod
+# @staticmethod
 #     def plot_mats(dfs, ax_shape, title=None, xlabel=None, ylabel=None, x_max=None, outputfile=None):
 #         # organs_cycle = cycle(organs)
 #
