@@ -96,7 +96,7 @@ class Curve(object):
 
             PlotBase.configure_ax(ax, par_plot)
 
-            PlotBase.configure_fig(fig, par_plot)
+            # PlotBase.configure_fig(fig, par_plot)
 
             # figsize = PlotBase.get_par(par_plot, 'figsize')
             # if figsize:
