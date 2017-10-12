@@ -15,7 +15,7 @@ class Curve(object):
         fig, axs = plt.subplots(nrows=nrows, ncols=ncols, sharex=sharex, sharey=sharey)
 
         par_titles = PlotBase.get_par(par_subplots, 'title', transform=cycle)
-
+        par_titlesize = PlotBase.get_par(par_subplots, 'title.size')
 
         axs = np.ravel(np.array(axs))
         for i in range(len(axs)):
@@ -23,7 +23,8 @@ class Curve(object):
             sub_dfs = dfs[i]
             ax = Curve.plot_curves(sub_dfs, par_plot, ax)
             if par_titles:
-                ax.set_title(next(par_titles))
+                ax.set_title(next(par_titles), fontsize=par_titlesize)
+
 
         par_legend = PlotBase.get_par(par_subplots, 'legend')
         if par_legend:
