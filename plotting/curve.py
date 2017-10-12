@@ -14,6 +14,7 @@ class Curve(object):
 
         fig, axs = plt.subplots(nrows=nrows, ncols=ncols, sharex=sharex, sharey=sharey)
 
+        assert fig is not None, "fig is none"
         par_titles = PlotBase.get_par(par_subplots, 'title', transform=cycle)
         par_titlesize = PlotBase.get_par(par_subplots, 'title.size')
 
