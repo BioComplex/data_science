@@ -22,7 +22,7 @@ class Curve(object):
         for i in range(len(axs)):
             ax = axs[i]
             sub_dfs = dfs[i]
-            ax = Curve.plot_curves(sub_dfs, par_plot, ax)
+            ax = Curve.plot_curves(sub_dfs, par_plot, fig, ax)
             if par_titles:
                 ax.set_title(next(par_titles), fontsize=par_titlesize)
 
@@ -63,7 +63,7 @@ class Curve(object):
         return fig, axs
 
     @staticmethod
-    def plot_curves(dfs, par_plot, ax=None):
+    def plot_curves(dfs, par_plot, fig=None, ax=None):
 
         if ax is None:
             fig, ax = plt.subplots(1, 1)
@@ -96,7 +96,7 @@ class Curve(object):
 
             PlotBase.configure_ax(ax, par_plot)
 
-            # PlotBase.configure_fig(fig, par_plot)
+            PlotBase.configure_fig(fig, par_plot)
 
             # figsize = PlotBase.get_par(par_plot, 'figsize')
             # if figsize:
