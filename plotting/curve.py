@@ -16,6 +16,7 @@ class Curve(object):
 
         par_titles = PlotBase.get_par(par_subplots, 'title', transform=cycle)
         par_titlesize = PlotBase.get_par(par_subplots, 'title.size')
+        print('test')
 
         axs = np.ravel(np.array(axs))
         for i in range(len(axs)):
