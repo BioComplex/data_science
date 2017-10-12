@@ -14,9 +14,9 @@ class PlotBase(object):
         PlotBase.set_par(par_plot, 'x_label', ax.set_xlabel)
         PlotBase.set_par(par_plot, 'y_label', ax.set_ylabel)
 
-        par_grid = PlotBase.get_par(par_plot, 'grid')
-        if par_grid and par_grid == True:
-            ax.grid(zorder=1)
+        # par_grid = PlotBase.get_par(par_plot, 'grid')
+        # if par_grid and par_grid == True:
+        #     ax.grid(zorder=1)
 
         par_titles = PlotBase.get_par(par_plot, 'title')
         par_titlesize = PlotBase.get_par(par_plot, 'title.size', default=16)
