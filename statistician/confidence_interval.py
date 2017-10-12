@@ -1,6 +1,6 @@
 import numpy as np
 from scipy import stats
-
+import scipy.stats as st
 
 class CI():
 
@@ -34,3 +34,24 @@ class CI():
         row['p_tilde'] = p
         row['ci'] = '%.02f (%.02f, %.02f)' % (round(p * 100, 2), round(l * 100, 2), round(u * 100, 2))
         return row
+
+    @staticmethod
+    def risk_ratio_ci(x1, n1, x2, n2, confidence_level=.95):
+        """ http://stats.stackexchange.com/questions/21298/confidence-interval-around-the-ratio-of-two-proportions
+        This function calculates the confidence interval from the ratio between 2 proportions.
+
+        Args:
+            x1 (int): number of success cases in population 1.
+            n1 (int): number of elements in population 1.
+            x2 (int): number of success cases in population 2.
+            n2 (int): number of elements in population 2.
+            confidence_level (double): percentage of confidence (0-1), default value is 0.95.
+
+        Returns:
+            tuple: log(teta), SEM(log(teta)), teta, CI(-,+)
+        """
+        teta = np.divide(np.divide(x1, n1), np.divide(x2, n2))
+        se_log_teta = np.sqrt(np.divide(1., x1) - np.divide(1., n1) + np.divide(1., x2) - np.divide(1., n2))
+        adj = st.norm.ppf(1 - (1 - confidence_level) / 2)
+        return np.log(teta), np.multiply(adj, se_log_teta), teta, (np.exp(np.subtract(np.log(teta), np.multiply(adj, se_log_teta))),np.exp(np.add(np.log(teta), np.multiply(adj, se_log_teta))))
+

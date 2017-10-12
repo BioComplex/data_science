@@ -50,11 +50,11 @@ class Curve(object):
         # fig.tight_layout(rect=par_figrect, w_pad=par_figwpad, h_pad=par_fighpad, pad=par_figpad)  # pad=1.0, h_pad=0.5, w_pad=0.5)
 
 
+        PlotBase.configure_fig(fig, par_plot)
 
-
-        figsize = PlotBase.get_par(par_plot, 'figsize')
-        if figsize:
-            fig.set_size_inches(figsize)
+        # figsize = PlotBase.get_par(par_plot, 'figsize')
+        # if figsize:
+        #     fig.set_size_inches(figsize)
 
         plt.rc('font', **{'family': 'sans-serif', 'sans-serif': ['Arial'], 'size': 12})
 
@@ -93,6 +93,12 @@ class Curve(object):
 
 
             PlotBase.configure_ax(ax, par_plot)
+
+            PlotBase.configure_fig(fig, par_plot)
+
+            # figsize = PlotBase.get_par(par_plot, 'figsize')
+            # if figsize:
+            #     fig.set_size_inches(figsize)
 
             # TODO parameterize
 
