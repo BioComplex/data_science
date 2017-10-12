@@ -35,9 +35,10 @@ class Curve(object):
             axs[par_legend_pos].legend(labels=par_legend, loc=par_legend_loc, fontsize=par_legend_fontsize)
 
         par_xlabel = PlotBase.get_par(par_subplots, 'x_label')
+        par_xlabelsize = PlotBase.get_par(par_subplots, 'x_label.size', default=12)
         par_xlabel_pos = PlotBase.get_par(par_subplots, 'x_label.pos', [0])
         if par_xlabel:
-            [axs[i].set_xlabel(par_xlabel) for i in par_xlabel_pos]
+            [axs[i].set_xlabel(par_xlabel, par_xlabelsize) for i in par_xlabel_pos]
 
         par_ylabel = PlotBase.get_par(par_subplots, 'y_label')
         par_ylabel_pos = PlotBase.get_par(par_subplots, 'y_label.pos', [0])
