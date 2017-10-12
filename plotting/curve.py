@@ -42,9 +42,11 @@ class Curve(object):
             [axs[i].set_xlabel(par_xlabel, fontsize=par_xlabelsize) for i in par_xlabel_pos]
 
         par_ylabel = PlotBase.get_par(par_subplots, 'y_label')
+        par_ylabelsize = PlotBase.get_par(par_subplots, 'y_label.size', 12)
         par_ylabel_pos = PlotBase.get_par(par_subplots, 'y_label.pos', [0])
+
         if par_ylabel:
-            [axs[i].set_ylabel(par_ylabel) for i in par_ylabel_pos]
+            [axs[i].set_ylabel(par_ylabel, fontsize=par_ylabelsize) for i in par_ylabel_pos]
 
         PlotBase.configure_fig(fig, par_subplots)
         # PlotBase.configure_ax(ax, par_subplots)
