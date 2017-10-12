@@ -19,11 +19,13 @@ class PlotBase(object):
             ax.grid(zorder=1)
 
         par_titles = PlotBase.get_par(par_plot, 'title')
+        par_titlesize = PlotBase.get_par(par_plot, 'title.size', default=16)
+
         if par_titles:
             if type(par_titles) is cycle:
-                ax.set_title(next(par_titles))
+                ax.set_title(next(par_titles), fontsize=par_titlesize)
             else:
-                ax.set_title(par_titles)
+                ax.set_title(par_titles, fontsize=par_titlesize)
 
         par_legend = PlotBase.get_par(par_plot, 'legend', transform=cycle)
         if par_legend:
